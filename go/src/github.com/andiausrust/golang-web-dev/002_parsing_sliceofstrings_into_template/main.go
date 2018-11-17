@@ -14,7 +14,9 @@ func init() {
 
 func main() {
 
-	err := tpl.ExecuteTemplate(os.Stdout, "tpl.gohtml",  42)
+	sages := []string{"Gandhi", "MLK", "Buddha", "Jesus"}
+
+	err := tpl.Execute(os.Stdout, sages)
 	if err != nil {
 		log.Fatalln(err)
 	}
