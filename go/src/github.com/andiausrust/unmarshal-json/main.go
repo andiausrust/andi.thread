@@ -1,38 +1,44 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"log"
+"fmt"
 )
 
-type thumbnail struct {
-	URL           string
-	Height, Width int
+type Car struct {
+	license string
 }
 
-type img struct {
-	Width, Height int
-	Title         string
-	Thumbnail     thumbnail
-	Animated      bool
-	IDs           []int
+func (c Car) Name() string {
+	return "car"
+}
+func (c Car) License() string {
+	return c.license
+}
+
+type MotorBike struct {
+	license string
+}
+
+func (mb *MotorBike) Name() string {
+	return "motor bike"
+}
+func (mb *MotorBike) License() string {
+	return mb.license
+}
+
+type Vehicle interface {
+	License() string
+	Name() string
+}
+
+func PrintLicense(v Vehicle) {
+	fmt.Println("I've seen a " + v.Name() + " with the license plate " + v.License())
 }
 
 func main() {
-	var data img
-	rcvd := `{"Width":800,"Height":600,"Title":"View from 15th Floor","Thumbnail":{"Url":"http://www.example.com/image/481989943","Height":125,"Width":100},"Animated":false,"IDs":[116,943,234,38793]}`
+	car := Car{"LJ178FU"}
+	bike := MotorBike{"LK6IDVR"}
 
-	err := json.Unmarshal([]byte(rcvd), &data)
-	if err != nil {
-		log.Fatalln("error unmarshalling", err)
-	}
-
-	fmt.Println(data)
-
-	for i, v := range data.IDs {
-		fmt.Println(i, v)
-	}
-
-	fmt.Println(data.Thumbnail.URL)
+	PrintLicense(car)
+	PrintLicense(&bike)
 }

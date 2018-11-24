@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<project name = "FirstAntProject" default = "main-target" basedir = ".">
+
+    <!-- Create directories required for the project using property element -->
+    <property name = "source.dir" value = "andi/com" />
+    <property name = "build.dir" value = "bin" />
+    <property name = "javadocs.dir" value = "docs" />
+    <property name = "javadist.dir" value = "dist" />
+
+    <!-- Clean target to delete existing directories -->
+    <!-- ===========================================
+        target: clean
+        ============================================ -->
+    <target name = "clean" description = "Clean target to delete existing directories">
+        <delete dir = "${build.dir}"/>
+        <delete dir = "${javadocs.dir}" />
+        <delete dir = "${javadist.dir}" />
+    </target>
+
+    <!-- ===========================================
+         target: make directory
+         ============================================ -->
+    <target name = "makedir" description = "Creating the deleted directories">
+        <mkdir dir = "${build.dir}" />
+        <mkdir dir = "${javadocs.dir}" />
+        <mkdir dir = "${javadist.dir}" />
+    </target>
+
+    <!-- ===========================================
+          target: compile
+          ============================================ -->
+    <target name = "compile" depends="clean, makedir" description = "">
+        <javac srcdir = "${source.dir}" destdir = "${build.dir}" includeantruntime = "true"/>
+    </target>
+
+    <!-- ===========================================
+     target: make docs
+     ============================================ -->
+    <target name = "docs" depends = "compile" description = "Creating Javadoc">
+        <javadoc packagenames = "src" sourcepath = "${source.dir}" destdir = "${javadocs.dir}">
+            <fileset dir = "${source.dir}">
+                <include name = "**" />
+            </fileset>
+        </javadoc>
+    </target>
+
+    <!-- ===========================================
+    target: jar, in manifest attribute -> the relative path of main class is stored in value
+    ============================================ -->
+    <target name = "jar" depends = "compile" description = "Creating deployable">
+        <jar destfile = "${javadist.dir}\FirstAntExample.jar" basedir = "${build.dir}">
+            <manifest>
+                <attribute name = "Main-class" value = "andi/com/CalculatorTest.java"></attribute>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- ===========================================
+    target: main-target
+    ============================================ -->
+    <target name = "main-target" depends = "compile, jar, docs" description = "This is my main target">
+
+    </target>
+
+</project>
